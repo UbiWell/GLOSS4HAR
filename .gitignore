@@ -1,0 +1,51 @@
+/agents/temp
+/agents/rough
+/agents/agents_ved.py
+/token_count/*
+#/evaluation/compliance_records/*
+#/evaluation/human_queries.csv
+#/evaluation/anomalous_use_case/*
+
+# Byte-compiled / cache files
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+env/
+venv/
+venv_location/
+location_env/
+
+# Temporary or generated scripts
+tmp_code_*.sh
+tmp_code_*.python
+
+# Keys or sensitive files
+id_rsa
+
+# Data / images / outputs
+*.png
+*.csv
+*.html
+
+# Logs
+*.log
+
+# OS-specific
+.DS_Store
+
+# IDE / editor settings
+.vscode/
+.idea/
+
+# Python packaging
+*.egg-info/
+dist/
+build/
+
+# Local data, caches and results
+convert_to_mongo_db/HARLLM/
+agents/.cache/
+*.pkl
+*.xlsx
+.env
