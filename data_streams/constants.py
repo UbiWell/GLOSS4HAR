@@ -6,7 +6,6 @@ PIXEL_AMBIENT_NOISE = 'pixel_ambient_noise'
 PIXEL_SKIN_TEMP = 'pixel_skin_temperature'
 PIXEL_STEPS = 'pixel_steps'
 PIXEL_WEAR_DETECTION = 'pixel_wear_detection'
-PIXEL_WRIST_AUC = 'pixel_wrist_auc'
 UEMA = 'uEMA'
 
 # Participant time zones ("est" = America/New_York); unlisted subjects default to UTC

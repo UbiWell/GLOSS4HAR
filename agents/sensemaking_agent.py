@@ -1,17 +1,15 @@
 import os
 import sys
 
-from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder, PromptTemplate
-from langchain_core.output_parsers import StrOutputParser
+from langchain_core.prompts import PromptTemplate
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from langchain_core.output_parsers import JsonOutputParser
-from langchain_core.runnables import RunnablePassthrough
 from pydantic import BaseModel, Field
 from agents.data_driver import all_functions
 
-from agents.data_driver import run_function_from_dict, json_to_dict, get_function_description
+from agents.data_driver import get_function_description
 from agents.llm import llmchat
 
 class Output(BaseModel):

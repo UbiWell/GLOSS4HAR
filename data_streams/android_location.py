@@ -5,7 +5,7 @@ import pytz
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'data_processing')))
 
-from datetime import datetime, timedelta
+from datetime import datetime
 from data_processing.data_processing_utils import fetch_records_between_timestamps
 from data_streams.constants import ANDROID_LOCATION, time_zone_dict
 from geopy import distance
@@ -99,8 +99,6 @@ def get_location_paths(uid, start_time, end_time):
     # Add the last path if any
     if current_path:
         paths.append(current_path)
-
-    user_timezone = time_zone_dict.get(uid, "UTC")
 
     for path in paths:
         if(len(path) > 1):

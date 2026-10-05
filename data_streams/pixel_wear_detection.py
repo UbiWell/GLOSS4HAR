@@ -1,35 +1,18 @@
-import math
 import sys
 import os
 import pytz
 
-from datetime import datetime, timedelta
-from agents.coding_agent import run_coding_agent
+from datetime import datetime
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'data_processing')))
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'data_streams')))
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../agents')))
 
-import agents.generic_summarizer
 from data_processing.data_processing_utils import fetch_records_between_timestamps
 from data_streams.constants import time_zone_dict, PIXEL_WEAR_DETECTION
 
 functions = {
-    # "WEAR_DETECTION1": {
-    #     "name": "get_pixel_wear_detection_records",
-    #     "description": "Fetches wear detection records for a user between specified timestamps.",
-    #     "usecase": ["code_generation"],
-    #     "function_call_instructions": "Call this function to get wear detection records for a user between specified timestamps.",
-    #     "params": {
-    #         "uid": {"type": "str", "description": "User ID"},
-    #         "start_time": {"type": "string", "description": "Start timestamp in seconds"},
-    #         "end_time": {"type": "string", "description": "End timestamp in seconds"}
-    #     },
-    #     "returns": "A list of wear detection records with timestamp and the wear status",
-    #     "example": "[{'timestamp': '2024-07-20 00:15:08', 'wear_status': 'Worn'}, {'timestamp': '2024-07-20 00:16:15', 'wear_status': 'Not Worn'}, {'timestamp': '2024-07-20 02:55:33', 'wear_status': 'Worn'}]"
-    # }
-    # ,
     "WEAR_DETECTION2": {
         "name": "detect_non_wear_period_within_time_range",
         "description": "Detects periods of non-wear within a specified time range for a user.",
@@ -64,8 +47,6 @@ def process_records(uid, wear_detection_records):
     unique_data = {record['timestamp']: record for record in wear_detection_records}
     wear_detection_records = list(unique_data.values())
     records = []
-    uid_timezone = time_zone_dict.get(uid, 'utc')  # Get UID-specific timezone or default to UTC
-    timezone = pytz.timezone("America/New_York") if uid_timezone == "est" else pytz.utc
     
     for r in wear_detection_records:
         d = {}

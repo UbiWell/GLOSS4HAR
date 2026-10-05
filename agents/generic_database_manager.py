@@ -1,12 +1,11 @@
 import os
 import sys
 
-from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-from langchain_core.output_parsers import StrOutputParser
+from langchain_core.prompts import ChatPromptTemplate
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from agents.data_driver import run_function_from_dict, json_to_dict, extract_data_multiple_type
+from agents.data_driver import extract_data_multiple_type
 from gpt_utils import generate_function_calling_prompt
 import json
 
@@ -18,7 +17,6 @@ import data_streams.pixel_steps_data as phone_steps_data
 import data_streams.pixel_hr as heart_rate_data
 import data_streams.pixel_skin_temp as skin_temp_data
 import data_streams.pixel_wear_detection as wear_detection_data
-import data_streams.pixel_wrist_auc as wrist_auc_data
 
 from agents.constants import databases
 from data_streams.generic_coding_functions import GenericCodingFunctions

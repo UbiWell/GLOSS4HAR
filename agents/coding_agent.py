@@ -1,22 +1,14 @@
 import asyncio
-import logging
 import sys
 import os
-# from autogen_core.application.logging import EVENT_LOGGER_NAME, TRACE_LOGGER_NAME
 from autogen_agentchat.base import TaskResult
-# from autogen_agentchat.teams import RoundRobinGroupChat, StopMessageTermination
-# from autogen_ext.models import OpenAIChatCompletionClient, AzureOpenAIChatCompletionClient
-import asyncio
 from autogen_ext.models.openai import OpenAIChatCompletionClient
 from autogen_agentchat.agents import AssistantAgent
 from autogen_agentchat.teams import RoundRobinGroupChat
 from autogen_agentchat.conditions import TextMentionTermination, SourceMatchTermination
-from autogen_agentchat.ui import Console
 from autogen_agentchat.agents import CodeExecutorAgent
 from autogen_ext.code_executors.docker import DockerCommandLineCodeExecutor
-from autogen_core import CancellationToken
-from docker.types import DeviceRequest
-from autogen_agentchat.conditions import MaxMessageTermination, StopMessageTermination
+from autogen_agentchat.conditions import MaxMessageTermination
 REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(REPO_ROOT)
 

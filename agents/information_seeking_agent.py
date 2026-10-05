@@ -3,12 +3,10 @@ import os, sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 
-from langchain_core.prompts import ChatPromptTemplate, PromptTemplate
-from langchain_core.output_parsers import StrOutputParser
+from langchain_core.prompts import PromptTemplate
 from pydantic import BaseModel, Field
 from langchain_core.output_parsers import JsonOutputParser
 from agents.constants import databases
-from langchain_core.runnables import RunnablePassthrough
 from agents.llm import llmchat
 
 class Output(BaseModel):

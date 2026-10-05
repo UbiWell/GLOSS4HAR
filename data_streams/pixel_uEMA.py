@@ -1,9 +1,8 @@
-import math
 import sys
 import os
 import pytz
 
-from datetime import datetime, timedelta
+from datetime import datetime
 
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -11,7 +10,6 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'd
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'data_streams')))
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../agents')))
 
-import agents.generic_summarizer
 from data_processing.data_processing_utils import fetch_records_between_timestamps
 from data_streams.constants import time_zone_dict, UEMA
 

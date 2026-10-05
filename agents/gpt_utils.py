@@ -1,4 +1,3 @@
-import os
 
 from agents.constants import databases
 

@@ -41,7 +41,6 @@ def create_vanilla_query(subject_id, annotations, time_period, start_time, stop_
     steps_data = detect_step_periods_within_time_range(subject_id, start_time, stop_time)
     phone_usage_data = get_phone_usage_period(subject_id, start_time, stop_time)
     ambient_noise_data = get_pixel_ambient_noise_records(subject_id, start_time, stop_time)
-    # skin_temp_data = get_change_point_skin_temp(subject_id, start_time, stop_time)
     wear_detection_data = detect_non_wear_period_within_time_range(subject_id, start_time, stop_time)
 
     initial_query = f"""{subject_id} annotated {annotations} during entire {time_period}.\n

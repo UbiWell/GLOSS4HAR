@@ -5,30 +5,11 @@ import pytz
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'data_processing')))
 
-from datetime import datetime, timedelta
+from datetime import datetime
 from data_processing.data_processing_utils import fetch_records_between_timestamps
 from data_streams.constants import time_zone_dict, PIXEL_STEPS
-from agents.generic_summarizer import GenericSummarizer
-from agents.coding_agent import run_coding_agent
 
 functions = {
-    #     "STEP1": {
-    #     "name": "get_steps_records",
-    #     "usecase": ["code_generation"],
-    #     "description": "Retrieves a records of steps, distance covered, floors ascended, and floors descended every minute for a specific user within a given time range.",
-    #     "function_call_instructions": "only call this function when difference between startime and endtime are less than 5 hours apart",
-    #     "params": {
-    #         "uid": {"type": "str",
-    #                 "description": "The unique identifier for the user whose steps data is to be fetched."},
-    #         "start_time": {"type": "string",
-    #                        "description": "The start of the time range for which steps data is required."},
-    #         "end_time": {"type": "string",
-    #                      "description": "The end of the time range for which steps data is required."},
-    #     },
-    #     "returns": "A list of steps records at the one minute interval, with timestamp and the number of steps.",
-    #     "example": "[{'timestamp': '2024-07-20 00:15:08', 'steps': 0}, {'timestamp': '2024-07-20 00:16:15', 'steps': 0}, {'timestamp': '2024-07-20 02:55:33', 'steps': 0}]"
-    # }
-    # ,
     "STEP2": {
         "name": "detect_step_periods_within_time_range",
         "usecase": ["code_generation"],
@@ -67,7 +48,6 @@ def process_records(uid, step_records):
     records = []
     for r in step_records:
         d = {}
-        prev = r
         start_time = datetime.fromtimestamp(r['timestamp'], tz = pytz.timezone('US/Eastern'))
         d['timestamp'] = start_time.strftime('%Y-%m-%d %H:%M:%S')
         d['steps'] = r['steps']

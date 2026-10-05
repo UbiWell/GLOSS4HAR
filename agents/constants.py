@@ -15,7 +15,6 @@ ABLATION_MEMORY = _env_flag("GLOSS4HAR_NO_MEMORY")
 USE_UEMA = _env_flag("GLOSS4HAR_USE_UEMA")
 
 # Databases the agents can query. Each one is backed by a CSV in the data folder (DATABASE_FILES).
-# pixel_wrist_auc.csv is in the dataset but was not offered to the agents in the paper.
 databases = {
     "location database": {
         "info": "Contains GPS location data (latitude, longitude, altitude) recorded via the phone.",

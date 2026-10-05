@@ -3,30 +3,13 @@ import sys
 import os
 import pytz
 
-from datetime import datetime, timedelta
+from datetime import datetime
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'data_processing')))
-from agents.coding_agent import run_coding_agent
-import statistics
-import agents.generic_summarizer
 from data_processing.data_processing_utils import fetch_records_between_timestamps
 from data_streams.constants import time_zone_dict, GARMIN_HR
 
 functions = {
-    # "HR1": {
-    #     "name": "get_garmin_hr_records",
-    #     "description": "Fetches heart rate records for a user between specified timestamps.",
-    #     "usecase": ["code_generation"],
-    #     "function_call_instructions": "Call this function to get heart rate records for a user between specified timestamps.",
-    #     "params": {
-    #         "uid": {"type": "str", "description": "User ID"},
-    #         "start_time": {"type": "string", "description": "Start timestamp in seconds"},
-    #         "end_time": {"type": "string", "description": "End timestamp in seconds"}
-    #     },
-    #     "returns": "A list of heart rate records with timestamp and the heart rate value",
-    #     "example": "[{'timestamp': '2024-07-20 00:15:08', 'heart_rate': 72}, {'timestamp': '2024-07-20 00:16:15', 'heart_rate': 75}, {'timestamp': '2024-07-20 02:55:33', 'heart_rate': 70}]"
-    # }
-    # ,
     "HR2": {
         "name": "get_change_point_hr",
         "description": "Detects change points in heart rate data for a user within a specified time range.",
@@ -139,6 +122,3 @@ if __name__ == "__main__":
     # Example usage
     hr_records = get_garmin_hr_records(uid, start_time, end_time)
     print("Heart Rate Records:", hr_records)
-
-    # change_points = get_change_point_hr(uid, start_time, end_time)
-    # print("Change Points in Heart Rate:", change_points)

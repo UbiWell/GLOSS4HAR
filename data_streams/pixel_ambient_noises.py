@@ -1,4 +1,3 @@
-import math
 import sys
 import os
 import pytz
@@ -7,9 +6,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'data_processing')))
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'data_streams')))
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../agents')))
-from datetime import datetime, timedelta
-from agents.coding_agent import run_coding_agent
-import agents.generic_summarizer
+from datetime import datetime
 from data_processing.data_processing_utils import fetch_records_between_timestamps
 from data_streams.constants import time_zone_dict, PIXEL_AMBIENT_NOISE
 

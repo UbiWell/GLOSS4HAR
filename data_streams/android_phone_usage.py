@@ -1,35 +1,18 @@
-import math
 import sys
 import os
 import pytz
 
-from datetime import datetime, timedelta
+from datetime import datetime
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'data_processing')))
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'data_streams')))
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../agents')))
-from agents.coding_agent import run_coding_agent
 
-import agents.generic_summarizer
 from data_processing.data_processing_utils import fetch_records_between_timestamps
 from data_streams.constants import time_zone_dict, ANDROID_PHONE_USAGE
 
 functions = {
-    # "USAGE1": {
-    #     "name": "get_phone_usage_records",
-    #     "description": "Fetches phone usage records for a user between specified timestamps.",
-    #     "usecase": ["code_generation"],
-    #     "function_call_instructions": "Call this function to get phone usage records for a user between specified timestamps.",
-    #     "params": {
-    #         "uid": {"type": "str", "description": "User ID"},
-    #         "start_time": {"type": "string", "description": "Start timestamp in seconds"},
-    #         "end_time": {"type": "string", "description": "End timestamp in seconds"}
-    #     },
-    #     "returns": "A list of phone usage records, with True/False values indicating whether the phone was in use or not, along with timestamps.",
-    #     "example": "[{'timestamp': 1720541549, 'in_use': 'True'}, {'timestamp': 1720565225, 'in_use': 'False'}]"
-    # }
-    # ,
     "USAGE2": {
         "name": "get_phone_usage_period",
         "description": "Summarizes phone usage periods for a user between specified timestamps.",
@@ -116,9 +99,3 @@ if __name__ == "__main__":
     # Example usage
     records = get_phone_usage_records(uid, start_time, end_time)
     print(records)
-    # for record in records:
-    #     print(f"Timestamp: {record['timestamp']}, In Use: {record['in_use']}")
-    #     # print the type of in_use
-    #     print(f"Type of In Use: {type(record['in_use'])}")
-
-    # print(get_phone_usage_period(uid, start_time, end_time))

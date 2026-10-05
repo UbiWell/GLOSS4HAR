@@ -2,8 +2,6 @@ import os
 import sys
 
 import json
-from datetime import datetime
-import importlib
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
@@ -15,10 +13,9 @@ import data_streams.pixel_skin_temp as pixel_skin_temp
 import data_streams.pixel_steps_data as pixel_steps_data
 import data_streams.pixel_uEMA as pixel_uEMA
 import data_streams.pixel_wear_detection as pixel_wear_detection
-import data_streams.pixel_wrist_auc as pixel_wrist_auc
 
 stream_modules = [android_location, android_phone_usage, pixel_ambient_noises, pixel_hr, pixel_skin_temp,
-                  pixel_steps_data, pixel_uEMA, pixel_wear_detection, pixel_wrist_auc]
+                  pixel_steps_data, pixel_uEMA, pixel_wear_detection]
 
 all_functions = {}
 for module in stream_modules:

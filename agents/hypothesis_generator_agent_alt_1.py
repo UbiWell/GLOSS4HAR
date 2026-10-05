@@ -5,9 +5,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'd
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'data_streams')))
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../agents')))
 
-from langchain_core.prompts import ChatPromptTemplate, PromptTemplate
-from langchain_core.output_parsers import StrOutputParser
-from langchain_core.runnables import RunnablePassthrough
+from langchain_core.prompts import PromptTemplate
 
 from pydantic import BaseModel, Field
 from langchain_core.output_parsers import JsonOutputParser
