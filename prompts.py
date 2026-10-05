@@ -57,23 +57,3 @@ def get_list_triangulation_prompt(subject_id, time_period, participants, activit
     Can you tell me the list of postures and activities {subject_id} did from {time_period} based on their passive sensing data an their reported timeline? 
         - Use the timeline to narrow down the activities they might be doing.
 """ + time_rule + _FULL_HOUR + _TIMELINE_RULES
-
-
-def get_real_time_sim_prompt(subject_id, time_period, participants, uEMA_sim, timeline_memory):
-    return f"""
-    On the day {participants[subject_id]}, the subject {subject_id} reported doing the following activities at these timestamp (use these to fix past mistakes):
-    ===========================
-    {uEMA_sim}
-    ===========================
-
-    The timeline so far (include this in final answer, with corrections and added activities):
-    ===========================
-    {timeline_memory}
-    ===========================
-
-    You job is to report all the activities and postures the subject did during {time_period} based on their passive sensing data, and their reported activities above.
-    The memory contains the timeline of activities so far. You should 1) add new activities/postures if they are not in the timeline yet, and 2) correct any existing activities/postures in the timeline if needed.
-        - Use the participants reports to fix any mistakes in the timeline and add any new activities they mentioned.
-        - Update the timeline based on the new reports from participants above. Reports are fixes for the past annotations. For example if the participant said they were not "sitting" at 10:15, but the timeline has an entry: "10:00-10:15: sitting", then you should try to change the "sitting" to something else for that entry, like "10:00-10:15: standing".
-        - Include the entire timeline from the memory and the new activities in the final answer.
-""" + _TIMELINE_RULES

@@ -1,34 +1,13 @@
 import os
 
-import langchain_openai as lcai
 from langchain_core.prompts import ChatPromptTemplate, PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
-from langchain_openai import ChatOpenAI
 
 from pydantic import BaseModel, Field
 from langchain_core.output_parsers import JsonOutputParser
-from agents.constants import USE_AZURE, USE_GPT5, USE_GPT_OSS, ABLATION_PRESENTATION_AGENT
-from agents.gpt_oss_langchain import GPTOSSChatModel
-GPTOSSChatModel.model_rebuild()
-
-if not USE_AZURE and not USE_GPT5 and not USE_GPT_OSS:
-    llmchat = ChatOpenAI(openai_api_key=os.getenv("OPENAI_API_KEY"), 
-                    model_name="gpt-4o",
-                    temperature= 0)
-elif USE_GPT_OSS:
-    llmchat = GPTOSSChatModel()
-elif USE_GPT5:
-    llmchat = ChatOpenAI(openai_api_key=os.getenv("OPENAI_API_KEY"), 
-                    model_name="gpt-5")
-else:
-    llmchat = lcai.AzureChatOpenAI(
-                    openai_api_key=os.getenv("AZURE_OPENAI_API_KEY"),
-                    azure_endpoint=os.getenv("AZURE_OPENAI_API_ENDPOINT"),
-                    azure_deployment="PROPILOT",
-                    openai_api_version="2024-05-01-preview",
-                    model_name="gpt-4o",
-                    temperature=0)
+from agents.constants import ABLATION_PRESENTATION_AGENT
+from agents.llm import llmchat
 
 
 class Output(BaseModel):

@@ -4,7 +4,6 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder, Prom
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.output_parsers import JsonOutputParser
 from langchain_core.runnables import RunnablePassthrough
-from langchain_openai import ChatOpenAI
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'data_processing')))
@@ -12,19 +11,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'd
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../agents')))
 
 from pydantic import BaseModel, Field
-from agents.constants import USE_AZURE, USE_GPT5, USE_GPT_OSS
-from agents.gpt_oss_langchain import GPTOSSChatModel
-GPTOSSChatModel.model_rebuild()
-
-if not USE_AZURE and not USE_GPT5 and not USE_GPT_OSS:
-    llmchat = ChatOpenAI(openai_api_key=os.getenv("OPENAI_API_KEY"), 
-                    model_name="gpt-4o",
-                    temperature= 0)
-elif USE_GPT_OSS:
-    llmchat = GPTOSSChatModel()
-elif USE_GPT5:
-    llmchat = ChatOpenAI(openai_api_key=os.getenv("OPENAI_API_KEY"), 
-                    model_name="gpt-5")
+from agents.llm import llmchat
 
 
 class Output(BaseModel):

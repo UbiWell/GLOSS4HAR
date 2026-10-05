@@ -20,22 +20,17 @@ from autogen_agentchat.conditions import MaxMessageTermination, StopMessageTermi
 REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(REPO_ROOT)
 
-from agents.constants import USE_GPT_OSS
-from agents.gpt_oss_langchain import LangChainModelClient
 from agents.gpt_utils import generate_code_generation_prompt
 
 async def coding_agent(user_query, system_prompt) -> TaskResult:
-    if not USE_GPT_OSS:
-        client = OpenAIChatCompletionClient(
-            model="gpt-4o-2024-08-06",
-            model_capabilities={
-                "vision": True,
-                "function_calling": True,
-                "json_output": True,
-            }
-        )
-    else:
-        client = LangChainModelClient()
+    client = OpenAIChatCompletionClient(
+        model="gpt-4o-2024-08-06",
+        model_capabilities={
+            "vision": True,
+            "function_calling": True,
+            "json_output": True,
+        }
+    )
 
     # Generated code runs in Docker with the repository root as its working directory (see Dockerfile)
     async with DockerCommandLineCodeExecutor(work_dir=REPO_ROOT,

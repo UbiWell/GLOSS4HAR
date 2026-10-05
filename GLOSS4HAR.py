@@ -9,7 +9,7 @@ Task 2 - build an activity timeline from passive sensing and a low-effort self-r
     python GLOSS4HAR.py timeline --subject pilot2 --self-report list --activity-list lists/pilot2.csv
     python GLOSS4HAR.py timeline --subject pilot2 --self-report list-no-time --activity-list lists/pilot2.csv
 
-Common options: --model {gpt-4o,gpt-5,gpt-oss}, --no-memory, --no-presentation, --output.
+Common options: --no-memory, --no-presentation, --output. All agents use gpt-4o (set OPENAI_API_KEY).
 Runs are resumable: rows/hours already in the output file are skipped.
 """
 import argparse
@@ -165,10 +165,9 @@ def run_timeline(subject, self_report, output_csv, activity_list=None):
 def parse_args():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     common = argparse.ArgumentParser(add_help=False)
-    common.add_argument('--model', choices=['gpt-4o', 'gpt-5', 'gpt-oss'], default='gpt-oss')
     common.add_argument('--no-memory', action='store_true', help='ablation: do not pass earlier results as memory')
     common.add_argument('--no-presentation', action='store_true', help='ablation: disable the presentation agent')
-    common.add_argument('--output', help='results CSV (default: results/<task>_..._<model>.csv)')
+    common.add_argument('--output', help='results CSV (default: results/<task>_<...>.csv)')
 
     sub = parser.add_subparsers(dest='task', required=True)
     correct = sub.add_parser('correct', parents=[common], help='task 1: correct participant annotations')
@@ -189,17 +188,16 @@ def main():
     args = parse_args()
 
     # The agents read their configuration from these at import time, so set them before importing anything.
-    os.environ['GLOSS4HAR_MODEL'] = args.model
     os.environ['GLOSS4HAR_NO_MEMORY'] = str(args.no_memory)
     os.environ['GLOSS4HAR_NO_PRESENTATION'] = str(args.no_presentation)
     os.environ['GLOSS4HAR_USE_UEMA'] = str(args.task == 'timeline' and args.self_report == 'uema')
 
-    suffix = args.model + ('_no_memory' if args.no_memory else '') + ('_no_presentation' if args.no_presentation else '')
+    suffix = ('_no_memory' if args.no_memory else '') + ('_no_presentation' if args.no_presentation else '')
     if args.task == 'correct':
         name = os.path.splitext(os.path.basename(args.annotations))[0]
-        output = args.output or os.path.join('results', f'correct_{name}_{suffix}.csv')
+        output = args.output or os.path.join('results', f'correct_{name}{suffix}.csv')
     else:
-        output = args.output or os.path.join('results', f'timeline_{args.self_report}_{args.subject}_{suffix}.csv')
+        output = args.output or os.path.join('results', f'timeline_{args.self_report}_{args.subject}{suffix}.csv')
     os.makedirs(os.path.dirname(os.path.abspath(output)), exist_ok=True)
 
     if args.task == 'correct':

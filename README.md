@@ -1,7 +1,8 @@
 # GLOSS4HAR
 
-Code for **"Feasibility of Using a Multi-Agent LLM System to Correct Annotations and Support Low-Effort Activity Labeling"**
-(Le, Choube, Mishra, Intille — *Proc. ACM IMWUT* 10(3), 2026, [doi:10.1145/3831653](https://doi.org/10.1145/3831653)).
+Code and data for **"Feasibility of Using a Multi-Agent LLM System to Correct Annotations and Support Low-Effort
+Activity Labeling"** (Le, Choube, Mishra, Intille — *Proc. ACM IMWUT* 10(3), 2026,
+[doi:10.1145/3831653](https://doi.org/10.1145/3831653)).
 
 GLOSS4HAR is a multi-agent LLM system that combines passive smartphone/smartwatch sensing data with participants'
 self-reports to help researchers clean activity annotations. The paper evaluates it on two tasks:
@@ -15,46 +16,44 @@ self-reports to help researchers clean activity annotations. The paper evaluates
 `sensemaking_process.SenseMaker` runs one query through the agents in `agents/`:
 action plan → information seeking → database manager → coding agent → sensemaking → presentation.
 The coding agent writes Python that calls the data-stream functions in `data_streams/` and runs it in a Docker
-container. Those functions read the CSVs in `data/` through `data_processing/data_processing_utils.py`.
+container. Those functions read the CSVs in `data/`. All agents use OpenAI gpt-4o.
 
 ## Setup
 
-Requires Python 3.11+ and Docker.
+Requires Python 3.11+, Docker, and an OpenAI API key.
 
 ```bash
-pip install -r requirements.txt            # pipeline
-pip install -r requirements-analysis.txt   # + evaluation/plotting scripts
-docker build -t sensemaking-code .         # image the coding agent runs generated code in
+pip install -r requirements.txt
+docker build -t sensemaking-code .     # image the coding agent runs generated code in
+export OPENAI_API_KEY=...
 ```
 
-Pick an LLM backend:
-
-| `--model` | Needs |
-|---|---|
-| `gpt-4o`, `gpt-5` | `OPENAI_API_KEY` |
-| `gpt-oss` (default) | an Ollama server with `gpt-oss:20b`; set `LLM_API_URL` (default `http://localhost:11434/api/generate`) and optionally `LLM_MODEL` |
-
-Optional: `GOOGLE_API_KEY` for reverse geocoding in the location tools.
+Optional: `GOOGLE_API_KEY` for reverse geocoding in the location functions.
 
 ## Data
 
-Put one CSV per data stream in `data/` (or point `GLOSS4HAR_DATA_DIR` at another folder when not using Docker; the
-container only sees the repository, so keep the data in `data/` for full runs). Every file has `subject_id` and
-`timestamp` (epoch milliseconds) columns plus the stream's value column:
+`data/` holds one CSV per sensor stream for the 8 participants in the paper (`pilot2`, `pilot5`–`pilot11`).
+Every file has `subject_id` and `timestamp` (epoch milliseconds) columns plus its value column(s):
 
-| File | Value column | Source |
-|---|---|---|
-| `android_location.csv` | `latitude`, `longitude` | phone GPS |
-| `android_phone_usage.csv` | `in_use` | phone screen in use |
-| `garmin_hr.csv` | `heart_rate` | watch heart rate |
-| `pixel_ambient_noise.csv` | `ambient_noise` | watch ambient sound classes |
-| `pixel_skin_temperature.csv` | `skin_temp` | watch skin temperature |
-| `pixel_steps.csv` | `steps` | watch step count |
-| `pixel_wear_detection.csv` | `wear_detection` | watch on-wrist detection |
-| `pixel_wrist_auc.csv` | `total_auc` | watch accelerometer activity counts |
-| `uEMA.csv` | `uEMA` | watch micro-EMA self-reports (uEMA condition only) |
+| File | Value column | Source | Agent database |
+|---|---|---|---|
+| `android_phone_usage.csv` | `in_use` | phone screen in use | phone usage |
+| `garmin_hr.csv` | `heart_rate` | watch heart rate | heart rate |
+| `pixel_ambient_noise.csv` | `ambient_noise` | watch ambient sound classes | ambient noise |
+| `pixel_skin_temperature.csv` | `skin_temp` | watch skin temperature | skin temperature |
+| `pixel_steps.csv` | `steps` | watch step count | step count |
+| `pixel_wear_detection.csv` | `wear_detection` | watch on-wrist detection | watch wear |
+| `pixel_wrist_auc.csv` | `total_auc` | watch accelerometer activity counts | (not used by the agents in the paper) |
+| `uEMA.csv` | `uEMA` | watch micro-EMA self-reports (some voice-transcribed) | uEMA (only with `--self-report uema`) |
 
-The study data are not included in this repository.
+**Location data is not included.** The paper's runs also used phone GPS (`android_location.csv`: `latitude`,
+`longitude`), but the raw traces can identify participants. Without that file the location database is turned off
+(a warning is printed), so results will differ from the paper. If you have access to it, put it in `data/`.
+
+The participants' annotation files (task 1 input) and activity lists (task 2 input) are not included either.
+
+The data folder can be moved with `GLOSS4HAR_DATA_DIR` when running without Docker. The container only sees the
+repository, so keep the data in `data/` for full runs.
 
 ## Running
 
@@ -63,7 +62,7 @@ Outputs go to `results/` unless you pass `--output`. Runs resume: rows/hours alr
 **Task 1: annotation correction.** The input CSV has columns `subject, date, labels, uncertainty_start, uncertainty_end`.
 
 ```bash
-python GLOSS4HAR.py correct --annotations annotations/pilot2_cleaned.csv --model gpt-4o
+python GLOSS4HAR.py correct --annotations annotations/pilot2_cleaned.csv
 ```
 
 **Task 2: timeline generation.** Runs each hour from 8am to 11pm on the participant's study day.
@@ -80,14 +79,16 @@ The activity-list file is inserted into the prompt as is.
 **Ablations** (either task): `--no-memory` stops earlier results being passed as memory, and `--no-presentation`
 swaps the presentation agent and the fixed posture/activity vocabulary for a generic answer prompt.
 
-**Baseline:** `RAG4HAR.py` runs the single-LLM ("vanilla") annotation-correction baseline. Its input files are
-still listed in its `__main__` block.
+**Baseline:** the single-LLM ("vanilla") annotation-correction baseline puts summarized sensor data straight into one
+gpt-4o prompt:
 
-## Evaluation
+```bash
+python RAG4HAR.py --annotations annotations/pilot2_cleaned.csv
+```
 
-`correct_labels_check.py`, `ttest_analysis.py`, `evaluation/classwise_f1.py` and `evaluation/misalignment_table.py`
-compute the F1 scores, statistics and figures in `figs/` from the result CSVs. They still expect the original
-results folder layout (`BASE` in `correct_labels_check.py`).
+## License
+
+Code is released under the MIT License (see `LICENSE`).
 
 ## Citation
 

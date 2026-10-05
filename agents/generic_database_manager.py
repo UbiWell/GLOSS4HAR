@@ -3,7 +3,6 @@ import sys
 
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.output_parsers import StrOutputParser
-from langchain_openai import ChatOpenAI
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
@@ -23,19 +22,8 @@ import data_streams.pixel_wrist_auc as wrist_auc_data
 
 from agents.constants import databases
 from data_streams.generic_coding_functions import GenericCodingFunctions
-from agents.constants import USE_AZURE, USE_GPT5, USE_GPT_OSS, USE_UEMA
-from agents.gpt_oss_langchain import GPTOSSChatModel
-GPTOSSChatModel.model_rebuild()
-
-if not USE_AZURE and not USE_GPT5 and not USE_GPT_OSS:
-    llmchat = ChatOpenAI(openai_api_key=os.getenv("OPENAI_API_KEY"), 
-                    model_name="gpt-4o",
-                    temperature= 0)
-elif USE_GPT_OSS:
-    llmchat = GPTOSSChatModel()
-elif USE_GPT5:
-    llmchat = ChatOpenAI(openai_api_key=os.getenv("OPENAI_API_KEY"), 
-                    model_name="gpt-5")
+from agents.constants import USE_UEMA
+from agents.llm import llmchat
 
 
 class GenericDatabaseManager:

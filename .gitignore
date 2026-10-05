@@ -1,52 +1,20 @@
-/agents/temp
-/agents/rough
-/agents/agents_ved.py
-/token_count/*
-#/evaluation/compliance_records/*
-#/evaluation/human_queries.csv
-#/evaluation/anomalous_use_case/*
-
-# Byte-compiled / cache files
+# Python
 __pycache__/
 *.py[cod]
-
-# Virtual environments
-env/
 venv/
-venv_location/
-location_env/
+.env
 
-# Temporary or generated scripts
+# Code written and executed by the coding agent
+tmp_code_*.py
 tmp_code_*.sh
-tmp_code_*.python
 
-# Keys or sensitive files
-id_rsa
+# Run outputs
+results/
 
-# Data / images / outputs
-*.png
-*.csv
-*.html
+# Raw GPS is not part of the public data release
+data/android_location.csv
 
-# Logs
-*.log
-
-# OS-specific
+# OS / editors
 .DS_Store
-
-# IDE / editor settings
 .vscode/
 .idea/
-
-# Python packaging
-*.egg-info/
-dist/
-build/
-
-# Local data, caches and results
-data/
-results/
-agents/.cache/
-*.pkl
-*.xlsx
-.env

@@ -1,41 +1,18 @@
 import os
 import sys
 
-import langchain_openai as lcai
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder, PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
-from langchain_openai import ChatOpenAI
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from agents.constants import result_expainations
 from langchain_core.output_parsers import JsonOutputParser
 from langchain_core.runnables import RunnablePassthrough
 from pydantic import BaseModel, Field
 from agents.data_driver import all_functions
 
 from agents.data_driver import run_function_from_dict, json_to_dict, get_function_description
-from agents.constants import USE_AZURE, USE_GPT5, USE_GPT_OSS
-from agents.gpt_oss_langchain import GPTOSSChatModel
-GPTOSSChatModel.model_rebuild()
-
-if not USE_AZURE and not USE_GPT5 and not USE_GPT_OSS:
-    llmchat = ChatOpenAI(openai_api_key=os.getenv("OPENAI_API_KEY"), 
-                    model_name="gpt-4o",
-                    temperature= 0)
-elif USE_GPT_OSS:
-    llmchat = GPTOSSChatModel()
-elif USE_GPT5:
-    llmchat = ChatOpenAI(openai_api_key=os.getenv("OPENAI_API_KEY"), 
-                    model_name="gpt-5")
-else:
-    llmchat = lcai.AzureChatOpenAI(
-                    openai_api_key=os.getenv("AZURE_OPENAI_API_KEY"),
-                    azure_endpoint=os.getenv("AZURE_OPENAI_API_ENDPOINT"),
-                    azure_deployment="PROPILOT",
-                    openai_api_version="2024-05-01-preview",
-                    model_name="gpt-4o",
-                    temperature=0)
+from agents.llm import llmchat
 
 class Output(BaseModel):
     understanding: str = Field(description="UNDERSTANDING is the current understanding to answer the user query")

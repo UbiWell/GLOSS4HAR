@@ -8,7 +8,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'd
 from datetime import datetime, timedelta
 import agents.generic_summarizer
 from data_processing.data_processing_utils import fetch_documents_between_timestamps
-from data_streams.constants import GARMIN_STEPS, time_zone_dict
+from data_streams.constants import time_zone_dict
 from agents.coding_agent import run_coding_agent
 from agents.constants import USE_UEMA
 
