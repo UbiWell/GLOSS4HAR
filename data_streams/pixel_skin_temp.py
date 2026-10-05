@@ -14,7 +14,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../agen
 from agents.coding_agent import run_coding_agent
 
 import agents.generic_summarizer
-from data_processing.data_processing_utils import fetch_documents_between_timestamps
+from data_processing.data_processing_utils import fetch_records_between_timestamps
 from data_streams.constants import time_zone_dict, PIXEL_SKIN_TEMP
 
 functions = {
@@ -43,7 +43,7 @@ def get_pixel_skin_temp_records(uid, start_time, end_time):
         start_time = start_time.timestamp()
         end_time = end_time.timestamp()
 
-    skin_temp_records = fetch_documents_between_timestamps(uid, start_time, end_time, PIXEL_SKIN_TEMP)
+    skin_temp_records = fetch_records_between_timestamps(uid, start_time, end_time, PIXEL_SKIN_TEMP)
     return process_records(uid, skin_temp_records)
 
 def process_records(uid, skin_temp_records):

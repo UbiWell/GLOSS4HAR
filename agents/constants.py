@@ -20,7 +20,7 @@ databases = {
     "location database": {
         "info": "Contains GPS location data (latitude, longitude, altitude) recorded via the phone.",
         "device": "Phone",
-        "additional_instructions": "The location database can be used to detected activity related to the location, such as home, work, entertainment, etc. It can also detected speed to identify activity like riding train, bus, cycling, ... The location database provides functions to calculate physical address but only call it when needed as it is computationally expensive. Do all calculation in latitude and longitude values and call this function only when you need to show the address to the user."
+        "additional_instructions": "The location database can be used to detected activity related to the location, such as home, work, entertainment, etc. It can also detected speed to identify activity like riding train, bus, cycling, ..."
     },
     "uEMA database": {
         "info": "Contains user's self-report of in-the-moment activity on the watch. Some of the self-reports are voice-based, so the responses in the database are transcribed text.",

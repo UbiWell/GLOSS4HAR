@@ -12,7 +12,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'd
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../agents')))
 
 import agents.generic_summarizer
-from data_processing.data_processing_utils import fetch_documents_between_timestamps
+from data_processing.data_processing_utils import fetch_records_between_timestamps
 from data_streams.constants import time_zone_dict, PIXEL_WRIST_AUC
 
 functions = {
@@ -55,7 +55,7 @@ def get_pixel_wrist_auc_records(uid, start_time, end_time):
         start_time = start_time.timestamp()
         end_time = end_time.timestamp()
 
-    wrist_auc_records = fetch_documents_between_timestamps(uid, start_time, end_time, PIXEL_WRIST_AUC)
+    wrist_auc_records = fetch_records_between_timestamps(uid, start_time, end_time, PIXEL_WRIST_AUC)
     return process_records(uid, wrist_auc_records)
 
 def process_records(uid, wrist_auc_records):

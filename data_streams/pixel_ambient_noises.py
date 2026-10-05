@@ -10,7 +10,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../agen
 from datetime import datetime, timedelta
 from agents.coding_agent import run_coding_agent
 import agents.generic_summarizer
-from data_processing.data_processing_utils import fetch_documents_between_timestamps
+from data_processing.data_processing_utils import fetch_records_between_timestamps
 from data_streams.constants import time_zone_dict, PIXEL_AMBIENT_NOISE
 
 functions = {
@@ -40,7 +40,7 @@ def get_pixel_ambient_noise_records(uid, start_time, end_time):
         start_time = start_time.timestamp()
         end_time = end_time.timestamp()
 
-    ambient_noise_records = fetch_documents_between_timestamps(uid, start_time, end_time, PIXEL_AMBIENT_NOISE)
+    ambient_noise_records = fetch_records_between_timestamps(uid, start_time, end_time, PIXEL_AMBIENT_NOISE)
     return process_records(uid, ambient_noise_records)
 
 def process_records(uid, ambient_noise_records):

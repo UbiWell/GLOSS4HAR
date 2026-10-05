@@ -9,7 +9,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'd
 from agents.coding_agent import run_coding_agent
 import statistics
 import agents.generic_summarizer
-from data_processing.data_processing_utils import fetch_documents_between_timestamps
+from data_processing.data_processing_utils import fetch_records_between_timestamps
 from data_streams.constants import time_zone_dict, GARMIN_HR
 
 functions = {
@@ -52,7 +52,7 @@ def get_garmin_hr_records(uid, start_time, end_time):
         start_time = start_time.timestamp()
         end_time = end_time.timestamp()
 
-    hr_records = fetch_documents_between_timestamps(uid, start_time, end_time, GARMIN_HR)
+    hr_records = fetch_records_between_timestamps(uid, start_time, end_time, GARMIN_HR)
     return process_records(uid, hr_records)
 
 def process_records(uid, hr_records):

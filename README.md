@@ -28,8 +28,6 @@ docker build -t sensemaking-code .     # image the coding agent runs generated c
 export OPENAI_API_KEY=...
 ```
 
-Optional: `GOOGLE_API_KEY` for reverse geocoding in the location functions.
-
 ## Data
 
 `data/` holds one CSV per sensor stream for the 8 participants in the paper (`pilot2`, `pilot5`–`pilot11`).

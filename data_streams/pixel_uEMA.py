@@ -12,7 +12,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'd
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../agents')))
 
 import agents.generic_summarizer
-from data_processing.data_processing_utils import fetch_documents_between_timestamps
+from data_processing.data_processing_utils import fetch_records_between_timestamps
 from data_streams.constants import time_zone_dict, UEMA
 
 functions = {
@@ -55,7 +55,7 @@ def get_pixel_uema_records(uid, start_time, end_time):
         start_time = start_time.timestamp()
         end_time = end_time.timestamp()
 
-    uema_records = fetch_documents_between_timestamps(uid, start_time, end_time, UEMA)
+    uema_records = fetch_records_between_timestamps(uid, start_time, end_time, UEMA)
     return process_uema_records(uema_records)
 
 # Same function under the name listed as UEMA2 in `functions` above

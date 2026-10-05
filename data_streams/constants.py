@@ -1,5 +1,3 @@
-import os
-
 # Data streams; each name is the CSV file in the data folder (<name>.csv)
 ANDROID_LOCATION = 'android_location'
 ANDROID_PHONE_USAGE = 'android_phone_usage'
@@ -10,9 +8,6 @@ PIXEL_STEPS = 'pixel_steps'
 PIXEL_WEAR_DETECTION = 'pixel_wear_detection'
 PIXEL_WRIST_AUC = 'pixel_wrist_auc'
 UEMA = 'uEMA'
-
-# Used for reverse geocoding in the location functions
-GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY', '')
 
 # Participant time zones ("est" = America/New_York); unlisted subjects default to UTC
 time_zone_dict = {
