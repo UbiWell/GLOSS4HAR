@@ -44,7 +44,8 @@ dist/
 build/
 
 # Local data, caches and results
-convert_to_mongo_db/HARLLM/
+data/
+results/
 agents/.cache/
 *.pkl
 *.xlsx

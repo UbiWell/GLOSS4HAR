@@ -7,53 +7,30 @@ import importlib
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-import data_streams.activity_data as activity_data
-import data_streams.location_data as location_data
-import data_streams.phone_steps_data as phone_steps_data
-import data_streams.garmin_hr_data as heart_rate_data
-import data_streams.lock_unlock_data as lock_unlock_data
-import data_streams.garmin_steps_data as garmin_steps_data
-import data_streams.wifi_data as wifi_data
-import data_streams.app_usage_data as app_usage_data
-import data_streams.battery_data as battery_data
-import data_streams.call_log as call_log
-# import models.stress_prediction_model as stress
+import data_streams.android_location as android_location
+import data_streams.android_phone_usage as android_phone_usage
+import data_streams.pixel_ambient_noises as pixel_ambient_noises
+import data_streams.pixel_hr as pixel_hr
+import data_streams.pixel_skin_temp as pixel_skin_temp
+import data_streams.pixel_steps_data as pixel_steps_data
+import data_streams.pixel_uEMA as pixel_uEMA
+import data_streams.pixel_wear_detection as pixel_wear_detection
+import data_streams.pixel_wrist_auc as pixel_wrist_auc
 
-all_functions = {**activity_data.functions, **location_data.functions, **phone_steps_data.functions,
-                 **heart_rate_data.functions, **lock_unlock_data.functions, **garmin_steps_data.functions,
-                 **wifi_data.functions, **app_usage_data.functions, **battery_data.functions, **call_log.functions,
-                }
+stream_modules = [android_location, android_phone_usage, pixel_ambient_noises, pixel_hr, pixel_skin_temp,
+                  pixel_steps_data, pixel_uEMA, pixel_wear_detection, pixel_wrist_auc]
+
+all_functions = {}
+for module in stream_modules:
+    all_functions.update(module.functions)
 
 
-def run_function_from_dict(function_name, params, type):
+def run_function_from_dict(function_name, params):
     try:
-        # Access the function from the module's namespace
-        if type == 'activity':
-            func = getattr(activity_data, function_name)
-        if type == 'location':
-            func = getattr(location_data, function_name)
-        if type == 'phone_steps':
-            func = getattr(phone_steps_data, function_name)
-        if type == 'heart_rate':
-            func = getattr(heart_rate_data, function_name)
-        if type == 'lock_unlock':
-            func = getattr(lock_unlock_data, function_name)
-        if type == 'garmin_steps':
-            func = getattr(garmin_steps_data, function_name)
-        if type == 'wifi':
-            func = getattr(wifi_data, function_name)
-        if type == 'app_usage':
-            func = getattr(app_usage_data, function_name)
-        if type == 'phone_battery':
-            func = getattr(battery_data, function_name)
-        if type == 'call_log':
-            func = getattr(call_log, function_name)
-
-        output = func(**params)
-        return output
-
-    except AttributeError as e:
-        print(f"Function {function_name} not found in module: {e}")
+        for module in stream_modules:
+            if hasattr(module, function_name):
+                return getattr(module, function_name)(**params)
+        print(f"Function {function_name} not found in any data stream module")
     except Exception as e:
         print(f"An error occurred: {e}")
 
@@ -71,19 +48,6 @@ def get_function_description(functions, function_name):
 
     return "Function not found."
 
-def extract_data(chain_output, data_type):
-    final_results = []
-    chain_output = chain_output.content
-    dict_output = json_to_dict(chain_output)
-    for d in dict_output:
-        func_name = dict_output[d]['name']
-        res = run_function_from_dict(func_name, dict_output[d]['params'], data_type)
-        final_results.append({"func": dict_output[d], "result": res, "func_id": d})
-    return final_results
-
-
-
-
 def extract_data_multiple_type(chain_output, coding_function = None):
     final_results = []
     chain_output = chain_output.content
@@ -91,29 +55,6 @@ def extract_data_multiple_type(chain_output, coding_function = None):
     for d in dict_output:
         func_name = dict_output[d]['name']
         function_id = d
-        data_type = ""
-        if "LOC" in function_id:
-            data_type = 'location'
-        if "ACT" in function_id:
-            data_type = 'activity'
-        if "PHONE" in function_id:
-            data_type = 'phone_steps'
-        if "GARMINHR" in function_id:
-            data_type = 'heart_rate'
-        if "UL" in function_id:
-            data_type = 'lock_unlock'
-        if "WIFI" in function_id:
-            data_type = 'wifi'
-        if "GARMINSTEP" in function_id:
-            data_type = 'garmin_steps'
-        if "APP" in function_id:
-            data_type = 'app_usage'
-        if "BATTERY" in function_id:
-            data_type = 'phone_battery'
-        if "CALLLOG" in function_id:
-            data_type = 'call_log'
-        if "BRIGHTNESS" in function_id:
-            data_type = 'brightness'
         if "CODING" in function_id:
             if coding_function:
                 params = dict_output[d]['params']
@@ -125,29 +66,6 @@ def extract_data_multiple_type(chain_output, coding_function = None):
                 final_results.append({"func": dict_output[d], "result": coding_function(query), "func_id": d})
                 continue
 
-        res = run_function_from_dict(func_name, dict_output[d]['params'], data_type)
+        res = run_function_from_dict(func_name, dict_output[d]['params'])
         final_results.append({"func": dict_output[d], "result": res, "func_id": d})
     return final_results
-
-
-if __name__ == "__main__":
-    json_string = '''
-   {
-    "get_location_trace": {
-        "uid": "test004",
-        "start_time": "2024-07-07 15:15:00",
-        "end_time": "2024-07-07 15:30:00"
-    }
-}
-    '''
-
-    input_dict = {
-        "generate_total_activity": {
-            "uid": "test004",
-            "start_time": datetime(2024, 7, 10, 0, 0, 0),
-            "end_time": datetime(2024, 7, 11, 14, 40, 59),
-        }
-    }
-    run_function_from_dict(input_dict)
-
-    print(json_to_dict(json_string))

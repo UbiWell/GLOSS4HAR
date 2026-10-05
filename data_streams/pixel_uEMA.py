@@ -11,7 +11,6 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'd
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'data_streams')))
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../agents')))
 
-# from agents.coding_agent import run_coding_agent
 import agents.generic_summarizer
 from data_processing.data_processing_utils import fetch_documents_between_timestamps
 from data_streams.constants import time_zone_dict, UEMA
@@ -59,19 +58,8 @@ def get_pixel_uema_records(uid, start_time, end_time):
     uema_records = fetch_documents_between_timestamps(uid, start_time, end_time, UEMA)
     return process_uema_records(uema_records)
 
-def get_pixel_uEMA_records(uid, start_time, end_time):
-    user_timezone = time_zone_dict.get(uid, "UTC")
-    timezone = pytz.timezone("America/New_York") if user_timezone == "est" else pytz.timezone(user_timezone)
-
-    if (not isinstance(start_time, float)):
-        if (isinstance(start_time, str)):
-            start_time = timezone.localize(datetime.strptime(start_time, "%Y-%m-%d %H:%M:%S")).astimezone(pytz.UTC)
-            end_time = timezone.localize(datetime.strptime(end_time, "%Y-%m-%d %H:%M:%S")).astimezone(pytz.UTC)
-        start_time = start_time.timestamp()
-        end_time = end_time.timestamp()
-
-    uema_records = fetch_documents_between_timestamps(uid, start_time, end_time, UEMA)
-    return process_uema_records(uema_records)
+# Same function under the name listed as UEMA2 in `functions` above
+get_pixel_uEMA_records = get_pixel_uema_records
 
 def process_uema_records(uema_records):
     records = []
@@ -91,12 +79,4 @@ def process_uema_records(uema_records):
 
 
 if __name__ == "__main__":
-    uid = "pilot2"
-    start_time = "2025-02-19 11:00:00"
-    end_time = "2025-02-19 12:00:00"
-    
-    # Example usage
-    records = get_pixel_uema_records(uid, start_time, end_time)
-    print(records)
-    
-    # Run coding agent to generate code for this function
+    print(get_pixel_uema_records("pilot2", "2025-02-19 11:00:00", "2025-02-19 12:00:00"))

@@ -1,10 +1,24 @@
+import os
 
+
+def _env_flag(name, default=False):
+    return os.getenv(name, str(default)).strip().lower() in ("1", "true", "yes")
+
+
+# LLM backend: "gpt-4o" (OpenAI), "gpt-5" (OpenAI) or "gpt-oss" (Ollama endpoint in LLM_API_URL)
+MODEL = os.getenv("GLOSS4HAR_MODEL", "gpt-oss")
+if MODEL not in ("gpt-4o", "gpt-5", "gpt-oss"):
+    raise ValueError(f"GLOSS4HAR_MODEL must be one of gpt-4o, gpt-5, gpt-oss (got '{MODEL}')")
 USE_AZURE = False
-USE_GPT5 = False
-USE_GPT_OSS = True
+USE_GPT5 = MODEL == "gpt-5"
+USE_GPT_OSS = MODEL == "gpt-oss"
 
-ABLATION_PRESENTATION_AGENT = False
-ABLATION_MEMORY = True
+# Ablations
+ABLATION_PRESENTATION_AGENT = _env_flag("GLOSS4HAR_NO_PRESENTATION")
+ABLATION_MEMORY = _env_flag("GLOSS4HAR_NO_MEMORY")
+
+# Give the agents access to the uEMA self-reports (the uEMA condition of task 2)
+USE_UEMA = _env_flag("GLOSS4HAR_USE_UEMA")
 result_expainations = {
     "get_location_records": """
     This function retrieves a trace of all GPS location records per minutre for a specific user within a given time range. It returns list of dict: A list of GPS location records where each record is represented as a dictionary. Each dictionary contains:
@@ -116,11 +130,11 @@ databases = {
         "device": "Phone",
         "additional_instructions": "The location database can be used to detected activity related to the location, such as home, work, entertainment, etc. It can also detected speed to identify activity like riding train, bus, cycling, ... The location database provides functions to calculate physical address but only call it when needed as it is computationally expensive. Do all calculation in latitude and longitude values and call this function only when you need to show the address to the user."
     },
-    # "uEMA database": {
-    #     "info": "Contains user's self-report of in-the-moment activity on the watch. Some of the self-reports are voice-based, so the responses in the database are transcribed text.",
-    #     "device": "Watch",
-    #     "additional_instructions": "Some of the transcribed responses might not be accurate (e.g., sitting might be transcribed to setting). The uEMA database is used to retrieve what activity participant did at that moment, not the start time of the activity. To get the exact start and end time of an activity, first use information in other databases where there is a time period of consistent data, then match it with the uEMA to get the exact activity label."
-    # },
+    "uEMA database": {
+        "info": "Contains user's self-report of in-the-moment activity on the watch. Some of the self-reports are voice-based, so the responses in the database are transcribed text.",
+        "device": "Watch",
+        "additional_instructions": "Some of the transcribed responses might not be accurate (e.g., sitting might be transcribed to setting). The uEMA database is used to retrieve what activity participant did at that moment, not the start time of the activity. To get the exact start and end time of an activity, first use information in other databases where there is a time period of consistent data, then match it with the uEMA to get the exact activity label."
+    },
     "heart rate database": {
         "info": "Contains heart rate data (anytime it changes) recorded from the Pixel smartwatch.",
         "device": "Watch",
@@ -158,3 +172,6 @@ databases = {
     #     "additional_instructions": "Wrist AUC <10 indicates the watch is not worn, <300 indicates low movement, <1000 indicates moderate movement. But this is based on the participants baseline level.",
     # }
 }
+
+if not USE_UEMA:
+    del databases["uEMA database"]

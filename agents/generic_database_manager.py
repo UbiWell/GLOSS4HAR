@@ -21,11 +21,9 @@ import data_streams.pixel_skin_temp as skin_temp_data
 import data_streams.pixel_wear_detection as wear_detection_data
 import data_streams.pixel_wrist_auc as wrist_auc_data
 
-# import models.stress_prediction_model as stress
-import data_streams.brightness as brightness_data
 from agents.constants import databases
 from data_streams.generic_coding_functions import GenericCodingFunctions
-from agents.constants import USE_AZURE, USE_GPT5, USE_GPT_OSS
+from agents.constants import USE_AZURE, USE_GPT5, USE_GPT_OSS, USE_UEMA
 from agents.gpt_oss_langchain import GPTOSSChatModel
 GPTOSSChatModel.model_rebuild()
 
@@ -57,8 +55,8 @@ class GenericDatabaseManager:
         for database in req_databases:
             if database == "location database": # or database == "location":
                 calling_functions.update(android_location.functions)
-            # elif database == "uEMA database": # or database == "uEMA":
-            #     calling_functions.update(uEMA.functions)
+            elif database == "uEMA database" and USE_UEMA:
+                calling_functions.update(uEMA.functions)
             elif database == "heart rate database": # or database == "heart rate":
                 calling_functions.update(heart_rate_data.functions)
             elif database == "phone usage database":# or database == "phone usage":

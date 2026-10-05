@@ -10,6 +10,7 @@ import agents.generic_summarizer
 from data_processing.data_processing_utils import fetch_documents_between_timestamps
 from data_streams.constants import GARMIN_STEPS, time_zone_dict
 from agents.coding_agent import run_coding_agent
+from agents.constants import USE_UEMA
 
 coding_functions = {
     "CODING1": {
@@ -82,9 +83,9 @@ class GenericCodingFunctions:
             if database == "location database":
                 function_imports += (
                     "\nUse following import for location functions (LOC)" + "\n" + "from data_streams.android_location import function_name")
-            # elif database == "uEMA database":
-            #     function_imports += (
-            #         "\nUse following import for uEMA functions (UEMA)" + "\n" + "from data_streams.pixel_uEMA import function_name")
+            elif database == "uEMA database" and USE_UEMA:
+                function_imports += (
+                    "\nUse following import for uEMA functions (UEMA)" + "\n" + "from data_streams.pixel_uEMA import function_name")
             elif database == "heart rate database":
                 function_imports += (
                     "\nUse following import for heart rate functions (HR)" + "\n" + "from data_streams.pixel_hr import function_name")

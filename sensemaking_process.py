@@ -33,10 +33,7 @@ class SenseMaker:
         self.presentation_agent = agents.presentation_agent.PresentationAgent()
         self.state_dict = {"INF": "INFORMATION SEEKING", "END": "END"}
 
-        if is_action_plan:
-            self.hypothesis_generator_agent = agents.hypothesis_generator_agent_alt_1.HypothesisGeneratorAgentAlt1()
-        else:
-            self.hypothesis_generator_agent = agents.hypothesis_generator_agent.HypothesisGeneratorAgent()
+        self.hypothesis_generator_agent = agents.hypothesis_generator_agent_alt_1.HypothesisGeneratorAgentAlt1()
 
     def make_sense(self):
         self.current_step = "START"

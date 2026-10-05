@@ -17,7 +17,8 @@ from autogen_ext.code_executors.docker import DockerCommandLineCodeExecutor
 from autogen_core import CancellationToken
 from docker.types import DeviceRequest
 from autogen_agentchat.conditions import MaxMessageTermination, StopMessageTermination
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.append(REPO_ROOT)
 
 from agents.constants import USE_GPT_OSS
 from agents.gpt_oss_langchain import LangChainModelClient
@@ -36,8 +37,9 @@ async def coding_agent(user_query, system_prompt) -> TaskResult:
     else:
         client = LangChainModelClient()
 
-    async with DockerCommandLineCodeExecutor(work_dir="/mnt/study/ari_work/llm-sensemaking/",
-                                             image="sensemaking-code", auto_remove=False,
+    # Generated code runs in Docker with the repository root as its working directory (see Dockerfile)
+    async with DockerCommandLineCodeExecutor(work_dir=REPO_ROOT,
+                                             image=os.getenv("GLOSS4HAR_DOCKER_IMAGE", "sensemaking-code"), auto_remove=False,
                                              stop_container=False) as code_executor:
         # Agent 1: generates code
         coder_agent = AssistantAgent("coder_agent", model_client=client,system_message=system_prompt + ". Low reasoning")

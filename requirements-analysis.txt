@@ -1,0 +1,6 @@
+# Extra packages for the evaluation / plotting scripts
+-r requirements.txt
+matplotlib==3.11.2
+seaborn==0.13.2
+bert-score==0.3.13
+openpyxl==3.1.5

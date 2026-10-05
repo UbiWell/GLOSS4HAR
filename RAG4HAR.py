@@ -10,7 +10,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'agents')))
 
 import sensemaking_process
-from data_processing.data_processing_utils import fetch_first_and_last_document, fetch_documents_between_timestamps
+from data_processing.data_processing_utils import fetch_documents_between_timestamps
 from data_streams.constants import IOS_LOCATION, GARMIN_HR, GARMIN_STRESS
 from datetime import datetime, timedelta
 import pandas as pd
